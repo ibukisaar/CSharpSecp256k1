@@ -54,7 +54,6 @@ namespace Console {
 			var msg = new byte[32];
 			random.NextBytes(msg);
 			var privKey = Secp256k1.CreatePrivateKey();
-			privKey[31] = 0;
 			var pubKey = Secp256k1.CreatePublicKey(privKey);
 			var sig = Secp256k1.Sign(privKey, msg);
 			bool ok = Secp256k1.Verify(pubKey, msg, sig);
