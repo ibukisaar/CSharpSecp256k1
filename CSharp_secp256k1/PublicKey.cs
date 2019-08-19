@@ -20,9 +20,9 @@ namespace Saar.Secp256k1 {
 		public void Serialize(Span<byte> buf, bool compressed = false) {
 			int len = compressed ? 33 : 65;
 			if (buf.Length < len) throw new ArgumentOutOfRangeException(nameof(buf));
-			x.CopyTo(buf.Slice(1, 32));
+			x.CopyTo(buf.Slice(1, 32), true);
 			if (!compressed) {
-				y.CopyTo(buf.Slice(33, 32));
+				y.CopyTo(buf.Slice(33, 32), true);
 				buf[0] = FullPublicKey;
 			} else {
 				buf[0] = y.v0 % 2 == 0 ? EvenPublicKey : OddPublicKey;
