@@ -7,7 +7,9 @@ namespace Saar.Secp256k1 {
 	public sealed class Signature {
 		internal U256 R, S;
 
+		public void GetR(Span<byte> buffer) => R.CopyTo(buffer, true);
 		public byte[] GetR() => R.ToArray(true);
+		public void GetS(Span<byte> buffer) => S.CopyTo(buffer, true);
 		public byte[] GetS() => S.ToArray(true);
 
 		internal Signature(in U256 r, in U256 s) => (R, S) = (r, s);

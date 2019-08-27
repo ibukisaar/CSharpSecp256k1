@@ -51,22 +51,22 @@ namespace Saar.Secp256k1.Math {
 				v2 = 0;
 				v3 = 0;
 			} else if (hexString.Length <= 32) {
-				v0 = ulong.Parse(hexString.Slice(hexString.Length - 16), NumberStyles.HexNumber);
+				v0 = ulong.Parse(hexString.Slice(hexString.Length - 16, 16), NumberStyles.HexNumber);
 				v1 = ulong.Parse(hexString.Slice(0, hexString.Length - 16), NumberStyles.HexNumber);
 				v2 = 0;
 				v3 = 0;
 			} else if (hexString.Length <= 48) {
-				v0 = ulong.Parse(hexString.Slice(hexString.Length - 16), NumberStyles.HexNumber);
+				v0 = ulong.Parse(hexString.Slice(hexString.Length - 16, 16), NumberStyles.HexNumber);
 				v1 = ulong.Parse(hexString.Slice(hexString.Length - 32, 16), NumberStyles.HexNumber);
 				v2 = ulong.Parse(hexString.Slice(0, hexString.Length - 32), NumberStyles.HexNumber);
 				v3 = 0;
 			} else if (hexString.Length <= 64) {
-				v0 = ulong.Parse(hexString.Slice(hexString.Length - 16), NumberStyles.HexNumber);
+				v0 = ulong.Parse(hexString.Slice(hexString.Length - 16, 16), NumberStyles.HexNumber);
 				v1 = ulong.Parse(hexString.Slice(hexString.Length - 32, 16), NumberStyles.HexNumber);
 				v2 = ulong.Parse(hexString.Slice(hexString.Length - 48, 16), NumberStyles.HexNumber);
 				v3 = ulong.Parse(hexString.Slice(0, hexString.Length - 48), NumberStyles.HexNumber);
 			} else {
-				v0 = ulong.Parse(hexString.Slice(hexString.Length - 16), NumberStyles.HexNumber);
+				v0 = ulong.Parse(hexString.Slice(hexString.Length - 16, 16), NumberStyles.HexNumber);
 				v1 = ulong.Parse(hexString.Slice(hexString.Length - 32, 16), NumberStyles.HexNumber);
 				v2 = ulong.Parse(hexString.Slice(hexString.Length - 48, 16), NumberStyles.HexNumber);
 				v3 = ulong.Parse(hexString.Slice(hexString.Length - 64, 16), NumberStyles.HexNumber);

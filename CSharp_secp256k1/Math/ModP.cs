@@ -73,6 +73,7 @@ namespace Saar.Secp256k1.Math {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static U256 Sqrt(in U256 a) {
 			if (!u256_sqrt_p(a, out var ret)) throw new ArgumentException("没有平方根", nameof(a));
+			//u256_fast_sqrt_p(a, out var ret);
 			return ret;
 		}
 
@@ -299,10 +300,52 @@ namespace Saar.Secp256k1.Math {
 			return Equal(p1.X, p2.X) && Equal(p1.Y, p2.Y);
 		}
 
-		static readonly U256 Seven = 7;
+		public static readonly U256 Seven = 7;
 
 		public static U256 GetY(in U256 x) {
 			return Sqrt(Add(Mul(Square(x), x), Seven));
+		}
+
+		static readonly U256 Gx = new U256("79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798");
+		static readonly U256 Gy = new U256("483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8");
+		static readonly Point G = new Point(Gx, Gy);
+		static readonly U256[,] Gx_Table = new U256[32, 256];
+		static readonly U256[,] Gy_Table = new U256[32, 256];
+
+		static ModP() {
+			var tempGTable = new Point[256];
+			tempGTable[0] = G;
+			for (int i = 1; i < 256; i++) {
+				tempGTable[i] = Mul2(tempGTable[i - 1]);
+			}
+
+			for (int j = 0; j < 32; j++) {
+				for (int i = 1; i < 256; i++) {
+					var t = Point.Zero;
+					if ((i & 1) != 0) t = Add(t, tempGTable[j * 8 + 0]);
+					if ((i & 2) != 0) t = Add(t, tempGTable[j * 8 + 1]);
+					if ((i & 4) != 0) t = Add(t, tempGTable[j * 8 + 2]);
+					if ((i & 8) != 0) t = Add(t, tempGTable[j * 8 + 3]);
+					if ((i & 16) != 0) t = Add(t, tempGTable[j * 8 + 4]);
+					if ((i & 32) != 0) t = Add(t, tempGTable[j * 8 + 5]);
+					if ((i & 64) != 0) t = Add(t, tempGTable[j * 8 + 6]);
+					if ((i & 128) != 0) t = Add(t, tempGTable[j * 8 + 7]);
+					Gx_Table[j, i] = ToU256(t.X);
+					Gy_Table[j, i] = ToU256(t.Y);
+				}
+			}
+		}
+
+		unsafe public static Point MulG(in U256 n) {
+			Point ret = Point.Zero;
+			fixed (U256* p = &n) {
+				for (int j = 0; j < 32; j++) {
+					var i = ((byte*)p)[j];
+					if (i == 0) continue;
+					ret = FastAdd(ret, Gx_Table[j, i], Gy_Table[j, i]);
+				}
+			}
+			return ret;
 		}
 	}
 }

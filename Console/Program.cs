@@ -43,7 +43,7 @@ namespace Console {
 
 		static void Test1() {
 			var msg = new byte[32];
-			var pubKey = PublicKey.Parse(ParseBytes("03a34b99f22c790c4e36b2b3c2c35a36db06226e41c692fc82b8b56ac1c540c5bd"));
+			var pubKey = PublicKey.Parse(ParseBytes("04a34b99f22c790c4e36b2b3c2c35a36db06226e41c692fc82b8b56ac1c540c5bd5b8dec5235a0fa8722476c7709c02559e3aa73aa03918ba2d492eea75abea235"));
 			var sigBytes = ParseBytes("3045022100c70d3082ba8b7be15f78e1daea1c3969b898bf1fc9811768542db6b2716eb1cb02204fba916ee29794fe2621b46299ae9a95f0b0168634f61730690f854dbea672e1");
 			var sig = Signature.Parse(sigBytes);
 			bool ok = Secp256k1.Verify(pubKey, msg, sig);

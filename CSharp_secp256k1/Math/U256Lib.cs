@@ -41,6 +41,8 @@ namespace Saar.Secp256k1.Math {
 		public static extern void u256_inv_p(in U256 a, out U256 result);
 		[DllImport(Dll)]
 		public static extern bool u256_sqrt_p(in U256 a, out U256 result);
+		[DllImport(Dll)]
+		public static extern void u256_fast_sqrt_p(in U256 a, out U256 result);
 
 		[DllImport(Dll)]
 		public static extern void u256_mul_n(in U256 a, in U256 b, out U256 result);
