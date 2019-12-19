@@ -7,10 +7,10 @@ namespace Saar.Secp256k1 {
 	public sealed class Signature {
 		internal U256 R, S;
 
-		public void GetR(Span<byte> buffer) => R.CopyTo(buffer, true);
-		public byte[] GetR() => R.ToArray(true);
-		public void GetS(Span<byte> buffer) => S.CopyTo(buffer, true);
-		public byte[] GetS() => S.ToArray(true);
+		public void GetR(Span<byte> buffer) => R.CopyTo(buffer, bigEndian: true);
+		public byte[] GetR() => R.ToArray(bigEndian: true);
+		public void GetS(Span<byte> buffer) => S.CopyTo(buffer, bigEndian: true);
+		public byte[] GetS() => S.ToArray(bigEndian: true);
 
 		internal Signature(in U256 r, in U256 s) => (R, S) = (r, s);
 
@@ -49,7 +49,7 @@ namespace Saar.Secp256k1 {
 			}
 			bytes.Slice(i, u256Len).CopyTo(tempBuffer.Slice(32 - u256Len, u256Len));
 			i += u256Len;
-			return new U256(tempBuffer, true);
+			return new U256(tempBuffer, bigEndian: true);
 		}
 
 		public static Signature Parse(ReadOnlySpan<byte> bytes) {
@@ -69,10 +69,10 @@ namespace Saar.Secp256k1 {
 			buf[1] = 68;
 			buf[2] = 2;
 			buf[3] = 32;
-			R.CopyTo(buf.Slice(4, 32), true);
+			R.CopyTo(buf.Slice(4, 32), bigEndian: true);
 			buf[36] = 2;
 			buf[37] = 32;
-			S.CopyTo(buf.Slice(38, 32), true);
+			S.CopyTo(buf.Slice(38, 32), bigEndian: true);
 		}
 
 		public byte[] Serialize() {

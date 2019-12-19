@@ -42,9 +42,9 @@ namespace Console {
 		static readonly Random random = new Random();
 
 		static void Test1() {
-			var msg = new byte[32];
+			var msg = ParseBytes("0000000000000000000009000000000000000000000000000100000000000000");
 			var pubKey = PublicKey.Parse(ParseBytes("04a34b99f22c790c4e36b2b3c2c35a36db06226e41c692fc82b8b56ac1c540c5bd5b8dec5235a0fa8722476c7709c02559e3aa73aa03918ba2d492eea75abea235"));
-			var sigBytes = ParseBytes("3045022100c70d3082ba8b7be15f78e1daea1c3969b898bf1fc9811768542db6b2716eb1cb02204fba916ee29794fe2621b46299ae9a95f0b0168634f61730690f854dbea672e1");
+			var sigBytes = ParseBytes("3045022100b0182d440c59af7fa61a700aab21a1be1dc207387bed425ff712d85758491d4702205d949f79002847dda119270ce683b4b4ad5fbe1b6b34d1e597f9bab0d43c9cc4");
 			var sig = Signature.Parse(sigBytes);
 			bool ok = Secp256k1.Verify(pubKey, msg, sig);
 			System.Console.WriteLine($"测试1: {ok}");
@@ -53,13 +53,14 @@ namespace Console {
 		static void Test2() {
 			var msg = new byte[32];
 			random.NextBytes(msg);
-			var privKey = Secp256k1.CreatePrivateKey();
+			var privKey = ParseBytes("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
 			var pubKey = Secp256k1.CreatePublicKey(privKey);
 			var sig = Secp256k1.Sign(privKey, msg);
 			bool ok = Secp256k1.Verify(pubKey, msg, sig);
 			System.Console.WriteLine($"测试2: {ok}");
 			PrintHex("私钥", privKey);
-			PrintHex("公钥", pubKey.Serialize());
+			PrintHex("短公钥", pubKey.Serialize(true));
+			PrintHex("长公钥", pubKey.Serialize());
 			PrintHex("消息", msg);
 			PrintHex("签名", sig.Serialize());
 		}
@@ -80,10 +81,13 @@ namespace Console {
 
 		static void Main(string[] args) {
 			Test1();
-			System.Console.WriteLine("===============================================");
+			//System.Console.WriteLine("===============================================");
 			Test2();
-			System.Console.WriteLine("===============================================");
+			//System.Console.WriteLine("===============================================");
 			Test3();
+
+
+
 		}
 	}
 }

@@ -1,18 +1,18 @@
-ï»¿#include <cinttypes>
+#include <cinttypes>
+
+typedef uint64_t u64;
 
 #ifndef __clang__
 #define ALWAYS_INLINE
-int __lzcnt64(uint64_t) { return 0; }
 #else
 #define ALWAYS_INLINE __attribute__((always_inline))
 #endif
 
-typedef uint64_t u64;
-typedef __uint128_t i128;
+typedef __uint128_t u128;
 
 ALWAYS_INLINE
 inline static void mul(u64 x, u64 y, u64& low, u64& high) {
-    i128 t = (i128)x * y;
+    u128 t = (u128)x * y;
     low = (u64)t;
     high = t >> 64;
 }
@@ -20,32 +20,29 @@ ALWAYS_INLINE
 inline static void square(u64 x, u64& low, u64& high) {
     mul(x, x, low, high);
 }
-
-#define CARRY(t, of) do { t += of; of = (u64)t; t >>= 64; } while(0)
-
 ALWAYS_INLINE
 inline static void add(u64 x, u64& y, u64& of1) {
-    i128 t = (i128)x + y;
-    y = (u64)t;
-    t >>= 64;
-    CARRY(t, of1);
+    __asm(R"(
+		addq %[x], %[y]
+		adcq $0, %[of1]
+	)" : [y] "+r"(y), [of1]"+r"(of1) : [x] "r"(x));
 }
 ALWAYS_INLINE
 inline static void add(u64 x, u64& y, u64& of1, u64& of2) {
-    i128 t = (i128)x + y;
-    y = (u64)t;
-    t >>= 64;
-    CARRY(t, of1);
-    CARRY(t, of2);
+    __asm(R"(
+		addq %[x], %[y]
+		adcq $0, %[of1]
+		adcq $0, %[of2]
+	)" : [y] "+r"(y), [of1]"+r"(of1), [of2]"+r"(of2) : [x] "r"(x));
 }
 ALWAYS_INLINE
 inline static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3) {
-    i128 t = (i128)x + y;
-    y = (u64)t;
-    t >>= 64;
-    CARRY(t, of1);
-    CARRY(t, of2);
-    CARRY(t, of3);
+    __asm(R"(
+		addq %[x], %[y]
+		adcq $0, %[of1]
+		adcq $0, %[of2]
+		adcq $0, %[of3]
+	)" : [y] "+r"(y), [of1]"+r"(of1), [of2]"+r"(of2), [of3]"+r"(of3) : [x] "r"(x));
 }
 ALWAYS_INLINE
 inline static void sub(u64 x, u64& y, u64& of1, u64& of2, u64& of3) {
@@ -58,95 +55,99 @@ inline static void sub(u64 x, u64& y, u64& of1, u64& of2, u64& of3) {
 }
 ALWAYS_INLINE
 inline static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3, u64& of4) {
-    i128 t = (i128)x + y;
-    y = (u64)t;
-    t >>= 64;
-    CARRY(t, of1);
-    CARRY(t, of2);
-    CARRY(t, of3);
-    CARRY(t, of4);
+    __asm(R"(
+		addq %[x], %[y]
+		adcq $0, %[of1]
+		adcq $0, %[of2]
+		adcq $0, %[of3]
+		adcq $0, %[of4]
+	)" : [y] "+r"(y), [of1]"+r"(of1), [of2]"+r"(of2), [of3]"+r"(of3), [of4]"+r"(of4) : [x] "r"(x));
 }
 ALWAYS_INLINE
 inline static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3, u64& of4, u64& of5) {
-    i128 t = (i128)x + y;
-    y = (u64)t;
-    t >>= 64;
-    CARRY(t, of1);
-    CARRY(t, of2);
-    CARRY(t, of3);
-    CARRY(t, of4);
-    CARRY(t, of5);
+    __asm(R"(
+		addq %[x], %[y]
+		adcq $0, %[of1]
+		adcq $0, %[of2]
+		adcq $0, %[of3]
+		adcq $0, %[of4]
+		adcq $0, %[of5]
+	)" : [y] "+r"(y), [of1]"+r"(of1), [of2]"+r"(of2), [of3]"+r"(of3), [of4]"+r"(of4), [of5]"+r"(of5) : [x] "r"(x));
 }
-
-#define ADD(t, x, y) do { t += (i128)x + y; y = (u64)t; t >>= 64; } while(0)
-
 ALWAYS_INLINE
 inline static void add_u448_384(u64 x1, u64 x2, u64 x3, u64 x4, u64 x5, u64 x6, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6, u64& y7) {
-    i128 t = 0;
-    ADD(t, x1, y1);
-    ADD(t, x2, y2);
-    ADD(t, x3, y3);
-    ADD(t, x4, y4);
-    ADD(t, x5, y5);
-    ADD(t, x6, y6);
-    CARRY(t, y7);
+    __asm(R"(
+		addq %[x1], %[y1]
+		adcq %[x2], %[y2]
+		adcq %[x3], %[y3]
+		adcq %[x4], %[y4]
+		adcq %[x5], %[y5]
+		adcq %[x6], %[y6]
+		adcq $0, %[y7]
+	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5), [y6]"+r"(y6), [y7]"+r"(y7) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4), [x5] "r"(x5), [x6] "r"(x6));
 }
 ALWAYS_INLINE
 inline static void add_u448_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6, u64& y7) {
-    i128 t = 0;
-    ADD(t, x1, y1);
-    ADD(t, x2, y2);
-    ADD(t, x3, y3);
-    ADD(t, x4, y4);
-    CARRY(t, y5);
-    CARRY(t, y6);
-    CARRY(t, y7);
+    __asm(R"(
+		addq %[x1], %[y1]
+		adcq %[x2], %[y2]
+		adcq %[x3], %[y3]
+		adcq %[x4], %[y4]
+		adcq $0, %[y5]
+		adcq $0, %[y6]
+		adcq $0, %[y7]
+	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5), [y6]"+r"(y6), [y7]"+r"(y7) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4));
 }
 ALWAYS_INLINE
 inline static void add_u384_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6) {
-    i128 t = 0;
-    ADD(t, x1, y1);
-    ADD(t, x2, y2);
-    ADD(t, x3, y3);
-    ADD(t, x4, y4);
-    CARRY(t, y5);
-    CARRY(t, y6);
+    __asm(R"(
+		addq %[x1], %[y1]
+		adcq %[x2], %[y2]
+		adcq %[x3], %[y3]
+		adcq %[x4], %[y4]
+		adcq $0, %[y5]
+		adcq $0, %[y6]
+	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5), [y6]"+r"(y6) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4));
 }
 ALWAYS_INLINE
 inline static void add_u384_320(u64 x1, u64 x2, u64 x3, u64 x4, u64 x5, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6) {
-    i128 t = 0;
-    ADD(t, x1, y1);
-    ADD(t, x2, y2);
-    ADD(t, x3, y3);
-    ADD(t, x4, y4);
-    ADD(t, x5, y5);
-    CARRY(t, y6);
+    __asm(R"(
+		addq %[x1], %[y1]
+		adcq %[x2], %[y2]
+		adcq %[x3], %[y3]
+		adcq %[x4], %[y4]
+		adcq %[x5], %[y5]
+		adcq $0, %[y6]
+	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5), [y6]"+r"(y6) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4), [x5] "r"(x5));
 }
 ALWAYS_INLINE
 inline static void add_u320_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
-    i128 t = 0;
-    ADD(t, x1, y1);
-    ADD(t, x2, y2);
-    ADD(t, x3, y3);
-    CARRY(t, y4);
-    CARRY(t, y5);
+    __asm(R"(
+		addq %[x1], %[y1]
+		adcq %[x2], %[y2]
+		adcq %[x3], %[y3]
+		adcq $0, %[y4]
+		adcq $0, %[y5]
+	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3));
 }
 ALWAYS_INLINE
 inline static void add_u320_128(u64 x1, u64 x2, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
-    i128 t = 0;
-    ADD(t, x1, y1);
-    ADD(t, x2, y2);
-    CARRY(t, y3);
-    CARRY(t, y4);
-    CARRY(t, y5);
+    __asm(R"(
+		addq %[x1], %[y1]
+		adcq %[x2], %[y2]
+		adcq $0, %[y3]
+		adcq $0, %[y4]
+		adcq $0, %[y5]
+	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5) : [x1] "r"(x1), [x2] "r"(x2));
 }
 ALWAYS_INLINE
 inline static void add_u256_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y3, u64& y4) {
-    i128 t = 0;
-    ADD(t, x1, y1);
-    ADD(t, x2, y2);
-    ADD(t, x3, y3);
-    CARRY(t, y4);
+    __asm(R"(
+		addq %[x1], %[y1]
+		adcq %[x2], %[y2]
+		adcq %[x3], %[y3]
+		adcq $0, %[y4]
+	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3));
 }
 ALWAYS_INLINE
 inline static void sub_u256_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y3, u64& y4) {
@@ -159,12 +160,13 @@ inline static void sub_u256_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y
 }
 ALWAYS_INLINE
 inline static void add_u320_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
-    i128 t = 0;
-    ADD(t, x1, y1);
-    ADD(t, x2, y2);
-    ADD(t, x3, y3);
-    ADD(t, x4, y4);
-    CARRY(t, y5);
+    __asm(R"(
+		addq %[x1], %[y1]
+		adcq %[x2], %[y2]
+		adcq %[x3], %[y3]
+		adcq %[x4], %[y4]
+		adcq $0, %[y5]
+	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4));
 }
 ALWAYS_INLINE
 inline static void sub_u320_u256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
@@ -275,7 +277,7 @@ inline static void u512_mod_p(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5, u64 x6
     mul(x6, negP, x6, H1);
     mul(x7, negP, x7, H2);
     mul(x8, negP, x8, H3);
-    add_u256_192(H0, H1, H2, x6, x7, x8, H3); // ç”¨ [x5,x6,x7,x8,H3] å­˜ uint320
+    add_u256_192(H0, H1, H2, x6, x7, x8, H3); // ÓÃ [x5,x6,x7,x8,H3] ´æ uint320
 
     add_u320_256(x5, x6, x7, x8, x1, x2, x3, x4, H3);
 
@@ -943,7 +945,3 @@ inline void u256_neg_n(const u64 a[4], u64 r[4]) {
         r[3] = 0;
     }
 }
-
-
-
-

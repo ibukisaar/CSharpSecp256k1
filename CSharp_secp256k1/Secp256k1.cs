@@ -31,7 +31,7 @@ namespace Saar.Secp256k1 {
 
 		public static PublicKey CreatePublicKey(ReadOnlySpan<byte> privateKey) {
 			if (privateKey.Length != 32) throw new InvalidPrivateKeyException("私钥长度必须是32字节");
-			var k = ModP.U256(privateKey);
+			var k = ModP.U256(privateKey, bigEndian: true);
 			if (k.IsZero || k > N_1) throw new InvalidPrivateKeyException();
 			var retPoint = ModP.MulG(k);
 			return new PublicKey(ModP.ToU256(retPoint.X), ModP.ToU256(retPoint.Y));
@@ -40,18 +40,18 @@ namespace Saar.Secp256k1 {
 		public static Signature Sign(ReadOnlySpan<byte> privateKey, ReadOnlySpan<byte> message) {
 			if (privateKey.Length != 32) throw new InvalidPrivateKeyException("私钥长度必须是32字节");
 			if (message.Length != 32) throw new InvalidMessageException("消息长度必须是32字节");
-			var dA = ModN.U256(privateKey);
-			var msg = ModN.U256(message);
+			var dA = ModN.U256(privateKey, bigEndian: true);
+			var msg = ModN.U256(message, bigEndian: true);
 			var tempPrivKey = CreatePrivateKey();
 			var tempPubKey = CreatePublicKey(tempPrivKey);
-			var k = ModN.U256(tempPrivKey);
+			var k = ModN.U256(tempPrivKey, bigEndian: true);
 			var S = ModN.Div(ModN.Add(msg, ModN.Mul(dA, tempPubKey.x)), k);
 			return new Signature(tempPubKey.x, S);
 		}
 
 		public static bool Verify(PublicKey publicKey, ReadOnlySpan<byte> message, Signature signature) {
 			if (message.Length != 32) throw new InvalidMessageException("消息长度必须是32字节");
-			var msg = ModN.U256(message);
+			var msg = ModN.U256(message, bigEndian: true);
 			var S_inv = ModN.Inverse(signature.S);
 			var u1 = ModN.Mul(S_inv, msg);
 			var u2 = ModN.Mul(S_inv, signature.R);

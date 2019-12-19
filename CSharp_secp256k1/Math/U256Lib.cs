@@ -7,7 +7,8 @@ using System.Text;
 namespace Saar.Secp256k1.Math {
 	[SuppressUnmanagedCodeSecurity]
 	unsafe internal static class U256Lib {
-		const string Dll = "secp256k1.dll";
+		//const string Dll = @"D:\MyDocuments\Documents\Visual Studio 2019\Projects\CSharp_secp256k1\x64\Release\secp256k1.dll";
+		const string Dll = @"secp256k1.dll";
 
 #pragma warning disable IDE1006 // 命名样式
 		[DllImport(Dll)]
