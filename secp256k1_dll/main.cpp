@@ -11,24 +11,24 @@ typedef uint64_t u64;
 typedef __uint128_t u128;
 
 ALWAYS_INLINE
-inline static void mul(u64 x, u64 y, u64& low, u64& high) {
+static void mul(u64 x, u64 y, u64& low, u64& high) {
     u128 t = (u128)x * y;
     low = (u64)t;
     high = t >> 64;
 }
 ALWAYS_INLINE
-inline static void square(u64 x, u64& low, u64& high) {
+static void square(u64 x, u64& low, u64& high) {
     mul(x, x, low, high);
 }
 ALWAYS_INLINE
-inline static void add(u64 x, u64& y, u64& of1) {
+static void add(u64 x, u64& y, u64& of1) {
     __asm(R"(
 		addq %[x], %[y]
 		adcq $0, %[of1]
 	)" : [y] "+r"(y), [of1]"+r"(of1) : [x] "r"(x));
 }
 ALWAYS_INLINE
-inline static void add(u64 x, u64& y, u64& of1, u64& of2) {
+static void add(u64 x, u64& y, u64& of1, u64& of2) {
     __asm(R"(
 		addq %[x], %[y]
 		adcq $0, %[of1]
@@ -36,7 +36,7 @@ inline static void add(u64 x, u64& y, u64& of1, u64& of2) {
 	)" : [y] "+r"(y), [of1]"+r"(of1), [of2]"+r"(of2) : [x] "r"(x));
 }
 ALWAYS_INLINE
-inline static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3) {
+static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3) {
     __asm(R"(
 		addq %[x], %[y]
 		adcq $0, %[of1]
@@ -45,7 +45,7 @@ inline static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3) {
 	)" : [y] "+r"(y), [of1]"+r"(of1), [of2]"+r"(of2), [of3]"+r"(of3) : [x] "r"(x));
 }
 ALWAYS_INLINE
-inline static void sub(u64 x, u64& y, u64& of1, u64& of2, u64& of3) {
+static void sub(u64 x, u64& y, u64& of1, u64& of2, u64& of3) {
     __asm(R"(
 		subq %[x], %[y]
 		sbbq $0, %[of1]
@@ -54,7 +54,7 @@ inline static void sub(u64 x, u64& y, u64& of1, u64& of2, u64& of3) {
 	)" : [y] "+r"(y), [of1]"+r"(of1), [of2]"+r"(of2), [of3]"+r"(of3) : [x] "r"(x));
 }
 ALWAYS_INLINE
-inline static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3, u64& of4) {
+static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3, u64& of4) {
     __asm(R"(
 		addq %[x], %[y]
 		adcq $0, %[of1]
@@ -64,7 +64,7 @@ inline static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3, u64& of4) {
 	)" : [y] "+r"(y), [of1]"+r"(of1), [of2]"+r"(of2), [of3]"+r"(of3), [of4]"+r"(of4) : [x] "r"(x));
 }
 ALWAYS_INLINE
-inline static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3, u64& of4, u64& of5) {
+static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3, u64& of4, u64& of5) {
     __asm(R"(
 		addq %[x], %[y]
 		adcq $0, %[of1]
@@ -75,7 +75,7 @@ inline static void add(u64 x, u64& y, u64& of1, u64& of2, u64& of3, u64& of4, u6
 	)" : [y] "+r"(y), [of1]"+r"(of1), [of2]"+r"(of2), [of3]"+r"(of3), [of4]"+r"(of4), [of5]"+r"(of5) : [x] "r"(x));
 }
 ALWAYS_INLINE
-inline static void add_u448_384(u64 x1, u64 x2, u64 x3, u64 x4, u64 x5, u64 x6, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6, u64& y7) {
+static void add_u448_384(u64 x1, u64 x2, u64 x3, u64 x4, u64 x5, u64 x6, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6, u64& y7) {
     __asm(R"(
 		addq %[x1], %[y1]
 		adcq %[x2], %[y2]
@@ -87,7 +87,7 @@ inline static void add_u448_384(u64 x1, u64 x2, u64 x3, u64 x4, u64 x5, u64 x6, 
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5), [y6]"+r"(y6), [y7]"+r"(y7) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4), [x5] "r"(x5), [x6] "r"(x6));
 }
 ALWAYS_INLINE
-inline static void add_u448_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6, u64& y7) {
+static void add_u448_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6, u64& y7) {
     __asm(R"(
 		addq %[x1], %[y1]
 		adcq %[x2], %[y2]
@@ -99,7 +99,7 @@ inline static void add_u448_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5), [y6]"+r"(y6), [y7]"+r"(y7) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4));
 }
 ALWAYS_INLINE
-inline static void add_u384_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6) {
+static void add_u384_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6) {
     __asm(R"(
 		addq %[x1], %[y1]
 		adcq %[x2], %[y2]
@@ -110,7 +110,7 @@ inline static void add_u384_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5), [y6]"+r"(y6) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4));
 }
 ALWAYS_INLINE
-inline static void add_u384_320(u64 x1, u64 x2, u64 x3, u64 x4, u64 x5, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6) {
+static void add_u384_320(u64 x1, u64 x2, u64 x3, u64 x4, u64 x5, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5, u64& y6) {
     __asm(R"(
 		addq %[x1], %[y1]
 		adcq %[x2], %[y2]
@@ -121,7 +121,7 @@ inline static void add_u384_320(u64 x1, u64 x2, u64 x3, u64 x4, u64 x5, u64& y1,
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5), [y6]"+r"(y6) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4), [x5] "r"(x5));
 }
 ALWAYS_INLINE
-inline static void add_u320_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
+static void add_u320_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
     __asm(R"(
 		addq %[x1], %[y1]
 		adcq %[x2], %[y2]
@@ -131,7 +131,7 @@ inline static void add_u320_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3));
 }
 ALWAYS_INLINE
-inline static void add_u320_128(u64 x1, u64 x2, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
+static void add_u320_128(u64 x1, u64 x2, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
     __asm(R"(
 		addq %[x1], %[y1]
 		adcq %[x2], %[y2]
@@ -141,7 +141,7 @@ inline static void add_u320_128(u64 x1, u64 x2, u64& y1, u64& y2, u64& y3, u64& 
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5) : [x1] "r"(x1), [x2] "r"(x2));
 }
 ALWAYS_INLINE
-inline static void add_u256_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y3, u64& y4) {
+static void add_u256_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y3, u64& y4) {
     __asm(R"(
 		addq %[x1], %[y1]
 		adcq %[x2], %[y2]
@@ -150,7 +150,7 @@ inline static void add_u256_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3));
 }
 ALWAYS_INLINE
-inline static void sub_u256_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y3, u64& y4) {
+static void sub_u256_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y3, u64& y4) {
     __asm(R"(
 		subq %[x1], %[y1]
 		sbbq %[x2], %[y2]
@@ -159,7 +159,7 @@ inline static void sub_u256_192(u64 x1, u64 x2, u64 x3, u64& y1, u64& y2, u64& y
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3));
 }
 ALWAYS_INLINE
-inline static void add_u320_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
+static void add_u320_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
     __asm(R"(
 		addq %[x1], %[y1]
 		adcq %[x2], %[y2]
@@ -169,7 +169,7 @@ inline static void add_u320_256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4));
 }
 ALWAYS_INLINE
-inline static void sub_u320_u256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
+static void sub_u320_u256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4, u64& y5) {
     __asm(R"(
 		subq %[x1], %[y1]
 		sbbq %[x2], %[y2]
@@ -179,7 +179,7 @@ inline static void sub_u320_u256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4), [y5]"+r"(y5) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4));
 }
 ALWAYS_INLINE
-inline static void sub_u256_u256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4) {
+static void sub_u256_u256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y2, u64& y3, u64& y4) {
     __asm(R"(
 		subq %[x1], %[y1]
 		sbbq %[x2], %[y2]
@@ -187,13 +187,10 @@ inline static void sub_u256_u256(u64 x1, u64 x2, u64 x3, u64 x4, u64& y1, u64& y
 		sbbq %[x4], %[y4]
 	)" : [y1] "+r"(y1), [y2]"+r"(y2), [y3]"+r"(y3), [y4]"+r"(y4) : [x1] "r"(x1), [x2] "r"(x2), [x3] "r"(x3), [x4] "r"(x4));
 }
-extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline uint32_t lzcnt(u64 x) {
-    return __lzcnt64(x);
-}
+
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline int u256_less_than(const u64 a[4], const u64 b[4]) {
+int u256_less_than(const u64 a[4], const u64 b[4]) {
     uint8_t ret;
     __asm(R"(
 		subq %[b0], %[a0]
@@ -206,7 +203,7 @@ inline int u256_less_than(const u64 a[4], const u64 b[4]) {
 }
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline int u256_less_than_equal(const u64 a[4], const u64 b[4]) {
+int u256_less_than_equal(const u64 a[4], const u64 b[4]) {
     uint8_t ret;
     __asm(R"(
 		subq %[b0], %[a0]
@@ -219,18 +216,18 @@ inline int u256_less_than_equal(const u64 a[4], const u64 b[4]) {
 }
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline int u256_great_than(const u64 a[4], const u64 b[4]) {
+int u256_great_than(const u64 a[4], const u64 b[4]) {
     return u256_less_than(b, a);
 }
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline int u256_great_than_equal(const u64 a[4], const u64 b[4]) {
+int u256_great_than_equal(const u64 a[4], const u64 b[4]) {
     return u256_less_than_equal(b, a);
 }
 
 
 ALWAYS_INLINE
-inline static void u320_mod_p_sub(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
+static void u320_mod_p_sub(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
     constexpr u64 negP = 0x1000003d1; // 2^256 - p
     u64 t0 = x1, t1 = x2, t2 = x3, t3 = x4;
     add(negP, t0, t1, t2, t3, x5);
@@ -243,7 +240,7 @@ inline static void u320_mod_p_sub(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
 }
 
 ALWAYS_INLINE
-inline static void u320_mod_p_add(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
+static void u320_mod_p_add(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
     constexpr u64 negP = 0x1000003d1; // 2^256 - p
     if (x5 == 0) {
         sub(negP, x1, x2, x3, x4);
@@ -251,7 +248,7 @@ inline static void u320_mod_p_add(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
 }
 
 ALWAYS_INLINE
-inline static void u320_mod_p(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
+static void u320_mod_p(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
     constexpr u64 negP = 0x1000003d1; // 2^256 - p
     u64 t0, t1;
     mul(x5, negP, t0, t1);
@@ -261,7 +258,7 @@ inline static void u320_mod_p(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
 }
 
 ALWAYS_INLINE
-inline static void u512_mod_p(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5, u64 x6, u64 x7, u64 x8) {
+static void u512_mod_p(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5, u64 x6, u64 x7, u64 x8) {
     constexpr u64 negP = 0x1000003d1; // 2^256 - p
 /*
                x8            x7            x6            x5
@@ -277,7 +274,7 @@ inline static void u512_mod_p(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5, u64 x6
     mul(x6, negP, x6, H1);
     mul(x7, negP, x7, H2);
     mul(x8, negP, x8, H3);
-    add_u256_192(H0, H1, H2, x6, x7, x8, H3); // ”√ [x5,x6,x7,x8,H3] ¥Ê uint320
+    add_u256_192(H0, H1, H2, x6, x7, x8, H3); // ”√ [x5,x6,x7,x8,H3] ¥Ê u320
 
     add_u320_256(x5, x6, x7, x8, x1, x2, x3, x4, H3);
 
@@ -285,7 +282,7 @@ inline static void u512_mod_p(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5, u64 x6
 }
 
 extern "C" __declspec(dllexport)
-inline void u256_mul_u64_p(const u64 a[4], u64 b, u64 r[4]) {
+void u256_mul_u64_p(const u64 a[4], u64 b, u64 r[4]) {
     u64 L0, L1, L2, L3;
     u64 H0, H1, H2, H3;
     mul(a[0], b, L0, H0);
@@ -426,12 +423,12 @@ H33           L33           L23           L13           L03           L02       
 }
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline void u256_norm_p(u64 x[4]) {
+void u256_norm_p(u64 x[4]) {
     u320_mod_p_sub(x[0], x[1], x[2], x[3], 0);
 }
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline void u256_add_p(const u64 a[4], const u64 b[4], u64 r[4]) {
+void u256_add_p(const u64 a[4], const u64 b[4], u64 r[4]) {
     u64 t0 = a[0], t1 = a[1], t2 = a[2], t3 = a[3], t4 = 0;
     add_u320_256(b[0], b[1], b[2], b[3], t0, t1, t2, t3, t4);
     u320_mod_p_sub(t0, t1, t2, t3, t4);
@@ -442,7 +439,7 @@ inline void u256_add_p(const u64 a[4], const u64 b[4], u64 r[4]) {
 }
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline void u256_sub_p(const u64 a[4], const u64 b[4], u64 r[4]) {
+void u256_sub_p(const u64 a[4], const u64 b[4], u64 r[4]) {
     u64 t0 = a[0], t1 = a[1], t2 = a[2], t3 = a[3], t4 = 1;
     sub_u320_u256(b[0], b[1], b[2], b[3], t0, t1, t2, t3, t4);
     u320_mod_p_add(t0, t1, t2, t3, t4);
@@ -453,7 +450,7 @@ inline void u256_sub_p(const u64 a[4], const u64 b[4], u64 r[4]) {
 }
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline void u256_neg_p(const u64 a[4], u64 r[4]) {
+void u256_neg_p(const u64 a[4], u64 r[4]) {
     if (a[0] || a[1] || a[2] || a[3]) {
         u64 t0 = 0xfffffffefffffc2fULL, t1 = ~0ULL, t2 = ~0ULL, t3 = ~0ULL;
         sub_u256_u256(a[0], a[1], a[2], a[3], t0, t1, t2, t3);
@@ -470,7 +467,7 @@ inline void u256_neg_p(const u64 a[4], u64 r[4]) {
 }
 
 ALWAYS_INLINE
-inline void u256_pow_part_p(u64 ret[4], u64 temp[4], u64 pow) {
+void u256_pow_part_p(u64 ret[4], u64 temp[4], u64 pow) {
     for (uint32_t i = 0; i < 64; i++) {
         if (pow & (1ULL << i)) {
             u256_mul_p(ret, temp, ret);
@@ -479,7 +476,7 @@ inline void u256_pow_part_p(u64 ret[4], u64 temp[4], u64 pow) {
     }
 }
 ALWAYS_INLINE
-inline void u256_pow_part_p(u64 ret[4], u64 temp[4], u64 pow, uint32_t bits) {
+void u256_pow_part_p(u64 ret[4], u64 temp[4], u64 pow, uint32_t bits) {
     for (uint32_t i = 0; i < bits - 1; i++) {
         if (pow & (1ULL << i)) {
             u256_mul_p(ret, temp, ret);
@@ -495,7 +492,7 @@ extern "C" __declspec(dllexport)
 void u256_pow_u64_p(const u64 a[4], u64 b, u64 r[4]) {
     u64 ret[] = { 1, 0, 0, 0 }, temp[] = { a[0], a[1], a[2], a[3] };
     if (b) {
-        u256_pow_part_p(ret, temp, b, 64 - lzcnt(b));
+        u256_pow_part_p(ret, temp, b, 64 - __lzcnt64(b));
     }
     r[0] = ret[0];
     r[1] = ret[1];
@@ -510,16 +507,16 @@ void u256_pow_p(const u64 a[4], const u64 b[4], u64 r[4]) {
         u256_pow_part_p(ret, temp, b[0]);
         u256_pow_part_p(ret, temp, b[1]);
         u256_pow_part_p(ret, temp, b[2]);
-        u256_pow_part_p(ret, temp, b[3], 64 - lzcnt(b[3]));
+        u256_pow_part_p(ret, temp, b[3], 64 - __lzcnt64(b[3]));
     } else if (b[2]) {
         u256_pow_part_p(ret, temp, b[0]);
         u256_pow_part_p(ret, temp, b[1]);
-        u256_pow_part_p(ret, temp, b[2], 64 - lzcnt(b[2]));
+        u256_pow_part_p(ret, temp, b[2], 64 - __lzcnt64(b[2]));
     } else if (b[1]) {
         u256_pow_part_p(ret, temp, b[0]);
-        u256_pow_part_p(ret, temp, b[1], 64 - lzcnt(b[1]));
+        u256_pow_part_p(ret, temp, b[1], 64 - __lzcnt64(b[1]));
     } else if (b[0]) {
-        u256_pow_part_p(ret, temp, b[0], 64 - lzcnt(b[0]));
+        u256_pow_part_p(ret, temp, b[0], 64 - __lzcnt64(b[0]));
     }
     r[0] = ret[0];
     r[1] = ret[1];
@@ -622,7 +619,7 @@ void u256_fast_sqrt_p(const u64 a[4], u64 r[4]) {
 }
 
 ALWAYS_INLINE
-inline static void u320_mod_n_sub(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
+static void u320_mod_n_sub(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
     constexpr u64 N0 = 0xbfd25e8cd0364141ULL, N1 = 0xbaaedce6af48a03bULL, N2 = 0xfffffffffffffffeULL;
     constexpr u64 negN0 = 0x402da1732fc9bebfULL, negN1 = 0x4551231950b75fc4ULL, negN2 = 1ULL;
 
@@ -637,7 +634,7 @@ inline static void u320_mod_n_sub(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
 }
 
 ALWAYS_INLINE
-inline static void u320_mod_n_add(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
+static void u320_mod_n_add(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
     constexpr u64 N0 = 0xbfd25e8cd0364141ULL, N1 = 0xbaaedce6af48a03bULL, N2 = 0xfffffffffffffffeULL;
     constexpr u64 negN0 = 0x402da1732fc9bebfULL, negN1 = 0x4551231950b75fc4ULL, negN2 = 1ULL;
 
@@ -647,7 +644,7 @@ inline static void u320_mod_n_add(u64& x1, u64& x2, u64& x3, u64& x4, u64 x5) {
 }
 
 ALWAYS_INLINE
-inline static void u256_mod_n(u64& x1, u64& x2, u64& x3, u64& x4) {
+static void u256_mod_n(u64& x1, u64& x2, u64& x3, u64& x4) {
     u320_mod_n_sub(x1, x2, x3, x4, 0);
 }
 
@@ -908,7 +905,7 @@ void u256_norm_n(u64 a[4]) {
 }
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline void u256_add_n(const u64 a[4], const u64 b[4], u64 r[4]) {
+void u256_add_n(const u64 a[4], const u64 b[4], u64 r[4]) {
     u64 t0 = a[0], t1 = a[1], t2 = a[2], t3 = a[3], t4 = 0;
     add_u320_256(b[0], b[1], b[2], b[3], t0, t1, t2, t3, t4);
     u320_mod_n_sub(t0, t1, t2, t3, t4);
@@ -919,7 +916,7 @@ inline void u256_add_n(const u64 a[4], const u64 b[4], u64 r[4]) {
 }
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline void u256_sub_n(const u64 a[4], const u64 b[4], u64 r[4]) {
+void u256_sub_n(const u64 a[4], const u64 b[4], u64 r[4]) {
     u64 t0 = a[0], t1 = a[1], t2 = a[2], t3 = a[3], t4 = 1;
     sub_u320_u256(b[0], b[1], b[2], b[3], t0, t1, t2, t3, t4);
     u320_mod_n_add(t0, t1, t2, t3, t4);
@@ -930,7 +927,7 @@ inline void u256_sub_n(const u64 a[4], const u64 b[4], u64 r[4]) {
 }
 
 extern "C" __declspec(dllexport) ALWAYS_INLINE
-inline void u256_neg_n(const u64 a[4], u64 r[4]) {
+void u256_neg_n(const u64 a[4], u64 r[4]) {
     if (a[0] || a[1] || a[2] || a[3]) {
         u64 t0 = 0xbfd25e8cd0364141ULL, t1 = 0xbaaedce6af48a03bULL, t2 = ~1ULL, t3 = ~0ULL;
         sub_u256_u256(a[0], a[1], a[2], a[3], t0, t1, t2, t3);

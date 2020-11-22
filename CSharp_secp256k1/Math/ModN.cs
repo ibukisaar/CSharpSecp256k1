@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using static Saar.Secp256k1.Math.U256Lib;
+using static CSharpSecp256k1.Math.Native;
 
-namespace Saar.Secp256k1.Math {
+namespace CSharpSecp256k1.Math {
 	internal static class ModN {
 		public static readonly U256 N = new U256("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141");
 
@@ -55,6 +55,7 @@ namespace Saar.Secp256k1.Math {
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static U256 Inverse(in U256 a) {
+			if (a.IsZero) throw new DivideByZeroException();
 			u256_inv_n(a, out var ret);
 			return ret;
 		}

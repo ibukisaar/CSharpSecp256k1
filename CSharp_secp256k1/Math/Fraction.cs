@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace Saar.Secp256k1.Math {
-	internal struct Fraction {
-		public U256 Num, Den;
+namespace CSharpSecp256k1.Math {
+	internal readonly struct Fraction {
+		public readonly U256 Num, Den;
 
 		public static readonly Fraction Zero = new Fraction(U256.Zero);
 		public static readonly Fraction One = new Fraction(U256.One);

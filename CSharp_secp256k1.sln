@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharp_secp256k1", "CSharp_secp256k1\CSharp_secp256k1.csproj", "{0DCA5F22-D45E-4683-B08A-D9426DAE9C81}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DB415648-BB8B-41EB-A2CA-20DAE9F8B9A9} = {DB415648-BB8B-41EB-A2CA-20DAE9F8B9A9}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console", "Console\Console.csproj", "{A6904363-F7D3-4DEF-935C-851AB2EDC496}"
 EndProject
