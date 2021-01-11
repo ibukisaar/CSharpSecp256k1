@@ -41,6 +41,14 @@ namespace CSharpSecp256k1.Math {
             v3 = 0;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public U256(ulong v0, ulong v1, ulong v2, ulong v3) {
+            this.v0 = v0;
+            this.v1 = v1;
+            this.v2 = v2;
+            this.v3 = v3;
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0057:使用范围运算符", Justification = "<挂起>")]
         public U256(ReadOnlySpan<char> hexString) {
             switch ((hexString.Length + 15) >> 4) {
@@ -83,9 +91,11 @@ namespace CSharpSecp256k1.Math {
             }
         }
 
+
+
         public bool IsZero {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            get => v0 == 0 && v1 == 0 && v2 == 0 && v3 == 0;
+            get => (v0 | v1 | v2 | v3) == 0;
         }
 
 
@@ -98,6 +108,7 @@ namespace CSharpSecp256k1.Math {
 
         static ReadOnlySpan<byte> HexTemplate => new[] { (byte)'0', (byte)'1', (byte)'2', (byte)'3', (byte)'4', (byte)'5', (byte)'6', (byte)'7', (byte)'8', (byte)'9', (byte)'a', (byte)'b', (byte)'c', (byte)'d', (byte)'e', (byte)'f' };
 
+        [SkipLocalsInit]
         public override string ToString() {
             static void WriteHex(char* buffer, ulong v) {
                 ref byte t = ref MemoryMarshal.GetReference(HexTemplate);

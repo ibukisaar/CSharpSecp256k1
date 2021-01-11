@@ -41,15 +41,15 @@ namespace CSharpSecp256k1 {
 
         public static PublicKey Parse(ReadOnlySpan<byte> bytes, out int readBytes) {
             if (bytes.Length < 33) throw new InvalidPublicKeyException("长度太小");
-            U256 x = new U256(bytes.Slice(1, 32), bigEndian: true), y;
-            if (x >= ModP.P) throw new InvalidPublicKeyException();
+            U256P x = new U256(bytes.Slice(1, 32), bigEndian: true), y;
+            if (x.Value >= U256P.P) throw new InvalidPublicKeyException();
             if (bytes[0] == EvenPublicKey || bytes[0] == OddPublicKey) {
                 try {
-                    y = ModP.GetY(x);
-                    if ((y.v0 % 2 == 0) != (bytes[0] == EvenPublicKey)) {
+                    y = EllipticCurve.GetY(x);
+                    if ((y.Value.v0 % 2 == 0) != (bytes[0] == EvenPublicKey)) {
                         // y.v0 % 2 == 0 && bytes[0] == OddPublicKey
                         // y.v0 % 2 != 0 && bytes[0] == EvenPublicKey
-                        y = ModP.Neg(y);
+                        y = -y;
                     }
                     readBytes = 33;
                     return new PublicKey(x, y);
@@ -58,8 +58,8 @@ namespace CSharpSecp256k1 {
                 }
             } else if (bytes[0] == FullPublicKey) {
                 if (bytes.Length < 65) throw new InvalidPublicKeyException("长度太小");
-                y = ModP.U256(bytes.Slice(33, 32), bigEndian: true);
-                if (ModP.Add(ModP.Pow(x, 3), ModP.Seven) != ModP.Square(y)) {
+                y = new U256(bytes.Slice(33, 32), bigEndian: true);
+                if ((x ^ 3) + 7 != (y ^ 2)) {
                     throw new InvalidPublicKeyException();
                 }
                 readBytes = 65;
@@ -70,7 +70,5 @@ namespace CSharpSecp256k1 {
         }
 
         public static PublicKey Parse(ReadOnlySpan<byte> bytes) => Parse(bytes, out _);
-
-        internal Point ToPoint() => new Point(X, Y);
     }
 }
